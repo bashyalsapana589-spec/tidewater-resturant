@@ -1,0 +1,36 @@
+services:
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+  api:
+    build: ./api
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:-tidewater}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-tidewater_pass}
+      PGDATABASE: ${POSTGRES_DB:-tidewater}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tidewater}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tidewater_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-tidewater}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tidewater}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

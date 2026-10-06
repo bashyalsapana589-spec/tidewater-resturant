@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidewater Kitchen — Seafood &amp; Grill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --foam:#EEF3F1; --teal:#0E4B4B; --coral:#E8553D; --ink:#14201F; --sand:#D8D2BE;
+  --head:"Bricolage Grotesque",system-ui,sans-serif; --body:"Newsreader",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--foam);color:var(--ink);font:400 1.15rem/1.6 var(--body)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 0}
+nav .logo{font:800 1.3rem var(--head);text-decoration:none;color:var(--teal)}
+nav a.link{font:500 1rem var(--head);text-decoration:none;margin-left:1.5rem}
+nav a.link:hover{color:var(--coral)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:3rem;align-items:center;padding:3rem 0 5rem}
+.hero h1{font:800 clamp(2.8rem,7vw,5.4rem)/.98 var(--head);color:var(--teal);letter-spacing:-.03em}
+.hero p{max-width:34ch;margin:1.5rem 0 2rem;font-size:1.3rem}
+.btn{display:inline-block;background:var(--coral);color:#fff;border:0;padding:.85rem 1.6rem;border-radius:4px;font:700 1.05rem var(--head);text-decoration:none;cursor:pointer}
+.btn:hover{background:#cf4630}
+.board{background:var(--teal);color:var(--foam);padding:2rem;border-radius:6px;transform:rotate(1.5deg);box-shadow:0 0 0 8px var(--sand)}
+.board h2{font:800 1.5rem var(--head);margin-bottom:1rem}
+.board li{list-style:none;display:flex;justify-content:space-between;gap:1rem;padding:.35rem 0;border-bottom:1px dashed rgba(238,243,241,.35)}
+.board li:last-child{border:0}
+.board .empty{opacity:.7}
+
+/* menu */
+section{padding:4rem 0}
+h2.title{font:800 clamp(2rem,4vw,3rem) var(--head);color:var(--teal);letter-spacing:-.02em;margin-bottom:2rem}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:3rem}
+.menu h3{font:800 1.3rem var(--head);color:var(--coral);margin-bottom:.8rem}
+.item{margin-bottom:1.1rem}
+.row{display:flex;align-items:baseline;gap:.6rem}
+.row .n{font:700 1.1rem var(--head)}
+.row .dots{flex:1;border-bottom:2px dotted var(--sand);transform:translateY(-4px)}
+.row .p{font:700 1.05rem var(--head)}
+.item small{display:block;font-size:1rem;opacity:.8}
+
+/* reservation */
+#reserve{background:var(--teal);color:var(--foam)}
+#reserve h2.title{color:var(--foam)}
+.reserve{display:grid;grid-template-columns:1fr 1.2fr;gap:3rem}
+form{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+label{display:flex;flex-direction:column;font:500 .95rem var(--head);gap:.3rem}
+.full{grid-column:1/-1}
+input,textarea{font:1.05rem var(--body);padding:.7rem;border:2px solid transparent;border-radius:4px;background:var(--foam);color:var(--ink)}
+.msg{grid-column:1/-1;min-height:1.5rem;font:500 1.05rem var(--head)}
+.msg.ok{color:#bff0d2}.msg.err{color:#ffd0c8}
+footer{padding:2rem 0;font-size:1rem}
+
+@media (max-width:760px){
+  .hero,.reserve{grid-template-columns:1fr}
+  form{grid-template-columns:1fr}
+  nav a.link{margin-left:1rem}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#">Tidewater</a>
+    <div><a class="link" href="#menu">Menu</a><a class="link" href="#reserve">Reserve a table</a></div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1>Fish off the boat at noon. On your plate by seven.</h1>
+      <p>A small seafood and grill kitchen on the harbor. We cook what the boats bring in that day.</p>
+      <a class="btn" href="#reserve">Reserve a table</a>
+    </div>
+    <aside class="board" aria-label="Tonight's mains">
+      <h2>Tonight's mains</h2>
+      <ul id="board"><li class="empty">Loading…</li></ul>
+    </aside>
+  </header>
+</div>
+
+<section id="menu">
+  <div class="wrap">
+    <h2 class="title">The menu</h2>
+    <div class="menu" id="menu-grid"></div>
+  </div>
+</section>
+
+<section id="reserve">
+  <div class="wrap reserve">
+    <div>
+      <h2 class="title">Reserve a table</h2>
+      <p>Tell us when you're coming and how many of you there are. We'll hold the table for 15 minutes past your time.</p>
+      <p style="margin-top:1rem">Open Tuesday to Sunday, 12:00–23:00.</p>
+    </div>
+    <form id="form" novalidate>
+      <label>Name<input name="name" required autocomplete="name"></label>
+      <label>Phone<input name="phone" type="tel" required autocomplete="tel"></label>
+      <label>Date<input name="date" type="date" required></label>
+      <label>Time<input name="time" type="time" required value="19:00"></label>
+      <label>Guests<input name="guests" type="number" min="1" max="12" value="2" required></label>
+      <label class="full">Notes (allergies, celebrations)<textarea name="notes" rows="2"></textarea></label>
+      <button class="btn full" type="submit">Book table</button>
+      <div class="msg" id="msg" role="status"></div>
+    </form>
+  </div>
+</section>
+
+<footer><div class="wrap">© Tidewater Kitchen. A demo project built with Docker Compose.</div></footer>
+
+<script>
+const money = n => "$" + Number(n).toFixed(2).replace(/\.00$/, "");
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+async function loadMenu() {
+  const grid = document.getElementById("menu-grid"), board = document.getElementById("board");
+  try {
+    const res = await fetch("/api/menu");
+    if (!res.ok) throw new Error();
+    const items = await res.json();
+    const order = ["Starters", "Mains", "Desserts", "Drinks"];
+    const groups = {};
+    items.forEach(i => (groups[i.category] ||= []).push(i));
+    order.filter(c => groups[c]).forEach(cat => {
+      const col = el("div"); col.append(el("h3", "", cat));
+      groups[cat].forEach(i => {
+        const item = el("div", "item"), row = el("div", "row");
+        row.append(el("span", "n", i.name), el("span", "dots"), el("span", "p", money(i.price)));
+        item.append(row, el("small", "", i.description));
+        col.append(item);
+      });
+      grid.append(col);
+    });
+    board.replaceChildren();
+    (groups["Mains"] || []).forEach(i => {
+      const li = el("li"); li.append(el("span", "", i.name), el("span", "", money(i.price))); board.append(li);
+    });
+  } catch {
+    grid.append(el("p", "", "The menu could not be loaded. Refresh the page to try again."));
+    board.replaceChildren(el("li", "empty", "Unavailable"));
+  }
+}
+
+const form = document.getElementById("form"), msg = document.getElementById("msg");
+form.date.min = new Date().toISOString().slice(0, 10);
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  msg.className = "msg"; msg.textContent = "Booking…";
+  try {
+    const res = await fetch("/api/reservations", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(form)))
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    msg.className = "msg ok"; msg.textContent = `Table booked. Your reservation number is #${data.id}.`;
+    form.reset(); form.time.value = "19:00"; form.guests.value = 2;
+  } catch (err) {
+    msg.className = "msg err"; msg.textContent = err.message || "Something went wrong. Please try again.";
+  }
+});
+loadMenu();
+</script>
+</body>
+</html>

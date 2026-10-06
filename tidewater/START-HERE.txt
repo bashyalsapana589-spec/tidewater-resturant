@@ -1,0 +1,6 @@
+1. Right-click the downloaded .zip -> Extract All -> Extract.
+2. Open the extracted "tidewater" folder.
+3. Double-click OPEN-IN-VSCODE.bat  (or open VS Code -> File -> Open Folder -> choose "tidewater").
+4. Start Docker Desktop and wait until it is running.
+5. Double-click RUN.bat. The website opens at http://localhost:8080
+6. Double-click STOP.bat when you are finished.
